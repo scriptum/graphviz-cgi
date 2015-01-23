@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if [ "$REQUEST_METHOD" = "POST" -a ! -z "$CONTENT_LENGTH" ] 
+then 
+	echo Content-type: text/svg
+	echo
+	TMP=$(mktemp -d)
+	cat > $TMP/graph.dot
+	timeout 5 dot -Tsvg $TMP/graph.dot
+	cat $TMP/graph.svg
+	rm -fr $TMP
+else
+	echo Content-type: text/html
+	echo
+	if ! type dot > /dev/null; then
+		echo "Cannot find graphviz on your system"
+		exit -1
+	fi
+	cat graphviz.html
+fi

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Graphviz</title>
+	<script type="text/javascript">
+		var timeout;
+		function run(e)
+		{
+			console.log(e.value);
+			var r = new XMLHttpRequest();
+			r.open("POST", "graphviz", true);
+			r.onreadystatechange = function(){
+				if(r.readyState != 4 || r.status != 200)
+					return;
+				var pic = document.getElementById("right");
+				pic.innerHTML = r.responseText;
+			};
+			r.send(e.value);
+		}
+		function key_up(e)
+		{
+			clearTimeout(timeout);
+			timeout = setTimeout(run, 500, e);
+		}
+		window.onload = function(){
+			 run(document.getElementById("in"));
+		}
+	</script>
+	<style type="text/css">
+	html, body {
+		margin: 0;
+		padding: 0;
+	}
+	#left, #right {
+		position: absolute;
+		margin: 0;
+		padding: 0;
+		top: 0;
+		bottom: 0;
+		disaply: block;
+	}
+	#left {
+		width: 30%;
+		left: 0px;
+	}
+	#right {
+		width: 70%;
+		right: 0;
+		overflow: auto;
+	}
+	#in {
+		margin: 0;
+		padding: 0px;
+		border: 0;
+		width: 100%;
+		height: 100%;
+	}
+	</style>
+</head>
+<body>
+	<div id="left">
+		<textarea id="in" onkeyup="key_up(this)">digraph G { a->b }</textarea>
+	</div>
+	<div id="right"></div>
+</body>
+</html>
